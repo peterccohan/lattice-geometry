@@ -1,0 +1,10 @@
+specimen_id,material,copy,printed_mass_g,width_mm,thickness_mm,span_mm,stiffness_N_per_mm,peak_load_N,flex_modulus_MPa,flex_strength_MPa,notes
+PLA-BAR-1,PLA,1,,,,50,,,,,
+PLA-BAR-2,PLA,2,,,,50,,,,,
+PLA-BAR-3,PLA,3,,,,50,,,,,
+PLA-CF-BAR-1,PLA-CF,1,,,,50,,,,,
+PLA-CF-BAR-2,PLA-CF,2,,,,50,,,,,
+PLA-CF-BAR-3,PLA-CF,3,,,,50,,,,,
+PAHT-CF-BAR-1,PAHT-CF,1,,,,50,,,,,
+PAHT-CF-BAR-2,PAHT-CF,2,,,,50,,,,,
+PAHT-CF-BAR-3,PAHT-CF,3,,,,50,,,,,

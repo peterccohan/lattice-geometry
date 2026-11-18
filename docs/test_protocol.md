@@ -18,18 +18,22 @@
 
 ## Three-point bend
 
-- Supports: two round rods, 180 mm apart for beams, 50 mm apart for bars.
-- Load: a third round rod at mid-span, with masses hung from it.
+Rig: the printed rig in [rig/](../rig/README.md).
+
+- Supports: rocking pads on saddles, 180 mm apart for beams (flat pads) and 50 mm apart for bars (R5 pads).
+- Load: the nose at mid-span, pressed by a 5:1 lever. Beams use plates on a peg. Bars use the weight tray.
 - Beam orientation: patterned 200 x 25 faces vertical, load on a solid face sheet.
-- Deflection: dial indicator or calipers under mid-span.
+- Deflection: dial indicator on the deflection yoke, which rests on the specimen over the supports and reads the tab on the nose.
 
 Procedure:
 
-1. Record the zero reading with only the loading rod and hanger in place.
-2. Add mass in equal steps. After each step wait about 10 s, then record mass and deflection in `data/beam_load_deflection.csv`.
-3. Continue until the specimen breaks or the deflection keeps growing without added mass.
-4. Record peak load, deflection at peak, and how it failed (wall buckling, node fracture, skin crack, crushing under the load rod).
+1. Place the specimen, nose and yoke, lower the lever onto the nose, and zero the indicator.
+2. Add mass in equal steps (about 1.25 kg on the peg for beams, about 0.25 kg in the tray for bars). After each step wait about 10 s, then record the added mass and the deflection in `data/beam_load_deflection.csv`.
+3. Continue until the specimen breaks or the deflection keeps growing without added mass. The lever stop catches the weights after about 14 mm of travel.
+4. Record peak load, deflection at peak, and how it failed (wall buckling, node fracture, skin crack, crushing under the load pad).
 5. Photograph the failure and the broken wall surfaces.
+
+Load at each step: `P = P0 + 5 x g x m_added`, with the preload `P0` worked out in the rig README.
 
 Test order: shuffle the specimens so that shapes and materials are mixed.
 

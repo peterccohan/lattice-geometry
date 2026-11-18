@@ -1,6 +1,6 @@
 # Printed bend rig
 
-A three-point bend rig made entirely of printed parts. It tests the 200 x 25 x 25 mm lattice beams at a 180 mm span and the solid flex bars at a 50 mm span. The only things you supply are the weights and a dial indicator.
+A three-point bend rig built from printed parts. It tests the 200 x 25 x 25 mm lattice beams at a 180 mm span and the solid flex bars at a 50 mm span. Everything structural is printed. The hardware is an M8 pivot bolt running on two 608 bearings, M5 and M3 heat-set inserts with screws, the weights, and a dial indicator.
 
 ![Beam setup](../docs/img/rig_beam.png)
 
@@ -26,38 +26,40 @@ A three-point bend rig made entirely of printed parts. It tests the 200 x 25 x 2
 | 05 | Beam loading nose | 1 | Top face on the bed |
 | 06 | Bar loading nose (R5) | 1 | Top face on the bed |
 | 07 | Lever | 1 | On its side, so the layers run along its length |
-| 08 | Pivot pin, 14 mm | 1 | On its flat |
-| 09 | Pin keeper | 1 | As oriented |
-| 10 | Saddle lock pin | 4 | Head down |
-| 11 | Plate peg, 1-inch plates | 1 | Sleeve down |
-| 12 | Plate peg, Olympic 2-inch plates | 1 | Sleeve down |
-| 13 | Weight tray (flex bars) | 1 | As oriented |
-| 14 | Beam deflection yoke | 1 | Needs supports |
-| 15 | Bar deflection yoke | 1 | Needs supports |
-| 16 | Indicator clamp, 8 mm stem | 1 | Print the one that fits your indicator |
-| 17 | Indicator clamp, 3/8 in stem | 1 | |
+| 08 | Bearing spacer | 2 | As oriented |
+| 09 | Plate peg, 1-inch plates | 1 | Sleeve down. Print this or 10, to match your plates |
+| 10 | Plate peg, Olympic 2-inch plates | 1 | Sleeve down |
+| 11 | Weight tray (flex bars) | 1 | As oriented. Fits peg 09 |
+| 12 | Beam deflection yoke | 1 | Needs supports |
+| 13 | Bar deflection yoke | 1 | Needs supports |
+| 14 | Indicator clamp, 8 mm stem | 1 | Print the one that fits your indicator |
+| 15 | Indicator clamp, 3/8 in stem | 1 | |
+
+Hardware, filament per part and totals: [docs/bom.md](../docs/bom.md).
 
 Each part has a `.step` and a `.3mf` in this folder, already in print orientation. `assembly_beam.step` and `assembly_bar.step` show everything in place.
 
-**Materials:**
-- **PAHT-CF:** use it for the parts that carry the full load: lever, pivot pin, both noses, support pads and saddles.
-- **PLA-CF or PLA:** fine for the base, yokes, pegs, tray and clamps.
+**Materials** (the full table with settings is in the BOM):
+- **PAHT-CF:** the contact parts: both noses, support pads, saddles, bearing spacers. These see the highest local stress and the most wear.
+- **PLA-CF:** lever (about 10 MPa peak at 2 kN), yokes, peg, tray, indicator clamp.
+- **PLA:** base (about 9 MPa peak). Its stiffness does not affect the data, because deflection is read from the yoke.
 
-Print the load-carrying parts with 5+ walls and 40%+ infill. Peak stress in the lever is about 10 MPa at 2 kN, and in the base about 9 MPa.
+This split puts each filament within one spool: PLA and PLA-CF on 1 kg, PAHT-CF on 0.5 kg.
 
 ## Assembly
 
-1. Slide both saddles onto the rail's dovetail. Line up each saddle's center notch with the span marks on the rail (180 mm for beams, 50 mm for bars), then drop two lock pins through each saddle into the rail.
+1. Slide both saddles onto the rail's dovetail. Line up each saddle's center notch with the span marks on the rail (180 mm for beams, 50 mm for bars), then fasten each saddle with two M5 x 16 screws into the rail inserts.
 2. Set a support pad on each saddle's rocker: flat pads for beams, R5 pads for bars.
-3. Put the lever between the tower cheeks, push the pivot pin through, and press the keeper onto the end.
-4. Push a peg down through the hole at the lever's free end.
+3. Install the heat-set inserts: 8 x M5 in the rail pockets, 2 x M3 in the indicator clamp.
+4. Press a 608 bearing into each side of the lever's pivot bore, flush with the faces. Put the lever between the tower cheeks with a printed spacer on each side, then pass the M8 x 80 partially threaded bolt through cheek, spacer, bearings, spacer and cheek. Add a washer and the nyloc nut, snug only: the nut clamps the inner races, and the lever must still swing freely.
+5. Push the peg down through the hole at the lever's free end.
 
 ## Running a test
 
 1. Mark mid-span on the specimen and center it on the pads.
 2. Set the nose on the specimen at mid-span, with its tab pointing toward the indicator post.
 3. Set the yoke on the specimen with its feet directly over the support pads.
-4. Slide the clamp onto the yoke post, push the indicator stem in, and lower it until the plunger rests on the nose tab with a few mm of travel used. Turn the dial face toward the end of the rig (−x) so it clears the tower.
+4. Slide the clamp onto the yoke post and lock it with the M3 x 10 screw. Push the indicator stem into the ring, lower it until the plunger rests on the nose tab with a few mm of travel used, and tighten the M3 x 12 pinch screw. Turn the dial face toward the end of the rig (−x) so it clears the tower.
 5. Lower the lever onto the nose, then zero the indicator. That reading includes the preload.
 6. Add weights in equal steps. After each one wait about 10 s, then record the added mass and the dial reading.
 

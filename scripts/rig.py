@@ -11,6 +11,11 @@ Load path
 
 Deflection is read relative to the specimen over its supports (a yoke that rests on the
 specimen), not relative to the base, so flex in the printed rig does not enter the data.
+
+Hardware (not printed)
+  Lever pivot: M8 x 80 partially threaded bolt + nyloc nut, lever runs on two 608 bearings pressed into it.
+  Saddles: M5 x 16 socket-head screws into M5 heat-set inserts in the rail (8 inserts).
+  Indicator clamp: two M3 heat-set inserts, M3 x 12 pinch screw, M3 x 10 post screw.
 """
 import math
 import os
@@ -30,8 +35,12 @@ BAR_W, BAR_T = 12.7, 3.2
 PIVOT_Y = -40.0        # lever pivot
 PEG_Y = 160.0          # weights: ratio (PEG_Y - PIVOT_Y) / (0 - PIVOT_Y) = 5
 LEVER_W, LEVER_H = 34.0, 40.0
-PIN_D = 14.0           # pivot pin
-LOCK_D = 5.0           # saddle locking pins
+BOLT_D = 8.0           # M8 pivot bolt
+BRG_OD, BRG_W, BRG_IR = 22.0, 7.0, 12.0   # 608 bearing: OD, width, inner-race OD
+BRG_FIT = 0.10         # added to the bearing OD for a press fit in a printed bore
+SPACER_T = 1.5         # printed spacer between each bearing inner race and the tower cheek
+M5_INSERT = (6.4, 10.0)   # hole diameter, depth (fits 5.7 to 9.5 mm long M5 inserts)
+M3_INSERT = (4.0, 6.0)    # hole diameter, depth (fits 4 to 5.7 mm long M3 inserts)
 STEM_Y = -21.0         # dial indicator stem axis (x, y)
 STEM_X = -52.0
 
@@ -78,8 +87,8 @@ def base():
     cross = box(-30, 30, -62, 185, 0, HB)
     tongue = prism_x([(-TONGUE_W0 / 2, HB), (TONGUE_W0 / 2, HB),
                       (TONGUE_W1 / 2, HB + TONGUE_H), (-TONGUE_W1 / 2, HB + TONGUE_H)], -120, 120)
-    gap = LEVER_W / 2 + 0.5
-    top = LEVER_CZ + PIN_D / 2 + 13
+    gap = LEVER_W / 2 + SPACER_T
+    top = LEVER_CZ + 20
     # Cheeks are full width only up near the pin; below z = 100 they stay clear (y < -32) of the
     # saddles, the yoke rail and the nose tab, which all sit between y = -30 and y = 0.
     knee = 100.0
@@ -90,11 +99,11 @@ def base():
     stop_top = LB - 52.0      # lever lands here after ~14 mm of nose travel (a break)
     stop = box(-15, 15, 94, 106, HB, stop_top)
     b = rail.union(cross).union(tongue).union(cheeks).union(stop)
-    b = b.cut(cyl_x(PIN_D / 2 + 0.3, -40, 40, PIVOT_Y, LEVER_CZ))
+    b = b.cut(cyl_x(BOLT_D / 2 + 0.2, -40, 40, PIVOT_Y, LEVER_CZ))
     for span in SPANS:
         for sx in (-span / 2, span / 2):
-            for sy in (-24, 24):
-                b = b.cut(cyl_z(LOCK_D / 2 + 0.3, HB - 12, HB + 1, sx, sy))
+            for sy in (-24, 24):                                   # M5 heat-set insert pockets
+                b = b.cut(cyl_z(M5_INSERT[0] / 2, HB - M5_INSERT[1], HB + 1, sx, sy))
             # span marks on the rail's -y face
             b = b.cut(box(sx - 0.5, sx + 0.5, -31, -29.2, HB - 10, HB + 1))
     return b
@@ -107,8 +116,9 @@ def saddle():
                     (-TONGUE_W1 / 2 - CLR, HB + TONGUE_H + CLR), (-TONGUE_W0 / 2 - CLR, HB)], -16, 16)
     rocker = cyl_y(ROCKER_R, -16, 16, 0, ROCKER_CZ).intersect(box(-8, 8, -16, 16, SADDLE_TOP - 1, ROCKER_TOP + 1))
     s = body.cut(slot).union(rocker)
-    for sy in (-24, 24):
-        s = s.cut(cyl_z(LOCK_D / 2 + 0.3, HB - 1, SADDLE_TOP + 1, 0, sy))
+    for sy in (-24, 24):                                           # M5 x 16 socket-head screw
+        s = s.cut(cyl_z(2.75, HB - 1, SADDLE_TOP + 1, 0, sy))
+        s = s.cut(cyl_z(4.75, SADDLE_TOP - 5.5, SADDLE_TOP + 1, 0, sy))
     s = s.cut(box(-0.5, 0.5, -31, -29.2, HB + 2, SADDLE_TOP + 1))     # center mark
     return s
 
@@ -149,25 +159,17 @@ def lever():
     tooth = cyl_x(TOOTH_R, -LEVER_W / 2, LEVER_W / 2, 0, NT + TOOTH_R).intersect(
         box(-LEVER_W / 2, LEVER_W / 2, -10, 10, NT - 1, LB + 1))
     lv = body.union(tooth)
-    lv = lv.cut(cyl_x(PIN_D / 2 + 0.4, -30, 30, PIVOT_Y, LEVER_CZ))
+    lv = lv.cut(cyl_x(BOLT_D / 2 + 1.0, -30, 30, PIVOT_Y, LEVER_CZ))            # bolt clearance
+    for x0 in (-LEVER_W / 2 - 1, LEVER_W / 2 - BRG_W):                          # 608 seats, flush
+        lv = lv.cut(cyl_x((BRG_OD + BRG_FIT) / 2, x0, x0 + BRG_W + 1, PIVOT_Y, LEVER_CZ))
     lv = lv.cut(cyl_z(8.2, LB - 1, LB + LEVER_H + 1, 0, PEG_Y))
     lv = lv.edges("|X").edges(cq.selectors.BoxSelector((-50, PIVOT_Y - 20, 0), (50, PIVOT_Y - 5, 300))).fillet(8)
     return lv
 
 
-def pivot_pin():
-    length = 2 * (LEVER_W / 2 + 0.5 + 10) + 7
-    p = cyl_x(PIN_D / 2, 0, length, 0, 0).union(cyl_x(PIN_D / 2 + 4, -4, 0, 0, 0))
-    return p.cut(box(-10, length + 1, -20, 20, -20, -PIN_D / 2 + 0.8))   # flat, prints lying on it
-
-
-def pin_keeper():
-    k = cyl_z(PIN_D / 2 + 4, 0, 5, 0, 0).cut(cyl_z(PIN_D / 2 - 0.1, -1, 6, 0, 0))
-    return k.cut(box(-0.6, 0.6, 0, PIN_D, -1, 6))
-
-
-def lock_pin():
-    return cyl_z(LOCK_D / 2, 0, 24, 0, 0).union(cyl_z(4.5, 24, 26, 0, 0))
+def bearing_spacer():
+    """Sits on the M8 bolt between a 608 inner race and the tower cheek, so the cheek never rubs the seal."""
+    return cyl_z(BRG_IR / 2 - 0.4, 0, SPACER_T, 0, 0).cut(cyl_z(BOLT_D / 2 + 0.2, -1, SPACER_T + 1, 0, 0))
 
 
 def plate_peg(sleeve_d, flange_d):
@@ -212,13 +214,25 @@ def yoke(span, top, half_w, lips):
 
 
 def indicator_clamp(stem_d):
-    """Slides on the yoke post (friction flexure) and grips the indicator stem (split ring)."""
+    """Slides on the yoke post and grips the indicator stem.
+    Stem: split ring closed by an M3 x 12 screw (clearance hole in one ear, M3 insert in the other).
+    Post: an M3 x 10 screw through an M3 insert in the socket's -x wall locks the height."""
     z0, z1 = 115, 129
-    sock = box(STEM_X - 8.2, STEM_X + 8.2, -43.2, -26.8, z0, z1).cut(box(STEM_X - 5, STEM_X + 5, -40, -30, z0 - 1, z1 + 1))
-    sock = sock.cut(box(STEM_X - 9, STEM_X - 4, -35.5, -34.5, z0 - 1, z1 + 1))
-    ring = cyl_z(stem_d / 2 + 3.7, z0, z1, STEM_X, STEM_Y)
-    c = sock.union(ring).cut(cyl_z(stem_d / 2 - 0.05, z0 - 1, z1 + 1, STEM_X, STEM_Y))
-    c = c.cut(box(STEM_X - 0.6, STEM_X + 0.6, STEM_Y, STEM_Y + 20, z0 - 1, z1 + 1))
+    zc = (z0 + z1) / 2
+    r_out = stem_d / 2 + 3.7
+    sock = box(STEM_X - 8.2, STEM_X + 5 + 3.2, -43.2, -26.8, z0, z1).union(
+        box(STEM_X - 12, STEM_X - 5, -40, -30, z0, z1))                       # thick -x wall for the insert
+    sock = sock.cut(box(STEM_X - 5.1, STEM_X + 5.1, -40.1, -29.9, z0 - 1, z1 + 1))
+    sock = sock.cut(cyl_x(M3_INSERT[0] / 2, STEM_X - 12 - 1, STEM_X - 5 + 0.5, -35, zc))
+    ring = cyl_z(r_out, z0, z1, STEM_X, STEM_Y)
+    ear_y = (STEM_Y + r_out - 2, STEM_Y + r_out + 8)
+    ears = box(STEM_X - 7.6, STEM_X + 7.6, ear_y[0], ear_y[1], z0, z1)
+    c = sock.union(ring).union(ears)
+    c = c.cut(cyl_z(stem_d / 2 + 0.1, z0 - 1, z1 + 1, STEM_X, STEM_Y))
+    c = c.cut(box(STEM_X - 0.8, STEM_X + 0.8, STEM_Y, ear_y[1] + 1, z0 - 1, z1 + 1))   # split
+    sy = ear_y[1] - 4
+    c = c.cut(cyl_x(1.7, STEM_X - 8, STEM_X, sy, zc))                                  # M3 clearance
+    c = c.cut(cyl_x(M3_INSERT[0] / 2, STEM_X, STEM_X + 8, sy, zc))                     # M3 insert
     return c
 
 
@@ -241,22 +255,20 @@ def to_bed(shape):
 # name, builder, copies, how to orient it for printing, notes
 PARTS = [
     ("01_base", base, 1, lambda s: s, "rail + crosspiece + pivot tower + lever stop, one piece"),
-    ("02_support_saddle", saddle, 2, lambda s: s, "slides on the rail, locked by two pins"),
+    ("02_support_saddle", saddle, 2, lambda s: s, "slides on the rail, two M5 screws into rail inserts"),
     ("03_beam_support_pad", lambda: support_pad(False), 2, flip, "rocks on the saddle, flat top"),
     ("04_bar_support_pad", lambda: support_pad(True), 2, flip, "rocks on the saddle, R5 top"),
     ("05_beam_loading_nose", beam_nose, 1, flip, "25 x 20 mm load pad"),
     ("06_bar_loading_nose", bar_nose, 1, flip, "R5 nose"),
     ("07_lever", lever, 1, on_side_x, "5:1, print on its side"),
-    ("08_pivot_pin", pivot_pin, 1, lambda s: s, "prints on its flat"),
-    ("09_pin_keeper", pin_keeper, 1, lambda s: s, "friction fit on the pivot pin"),
-    ("10_saddle_lock_pin", lock_pin, 4, flip, "head down"),
-    ("11_plate_peg_standard", lambda: plate_peg(25.0, 40.0), 1, flip, "for 1-inch-hole plates"),
-    ("12_plate_peg_olympic", lambda: plate_peg(48.0, 70.0), 1, flip, "for 2-inch-hole plates"),
-    ("13_weight_tray", weight_tray, 1, lambda s: s, "on the standard peg, for flex bars"),
-    ("14_beam_deflection_yoke", lambda: yoke(SPANS[0], BT, BEAM_W / 2, True), 1, lambda s: s, "needs supports"),
-    ("15_bar_deflection_yoke", lambda: yoke(SPANS[1], BB + BAR_T, BAR_W / 2, False), 1, lambda s: s, "needs supports"),
-    ("16_indicator_clamp_8mm", lambda: indicator_clamp(8.0), 1, lambda s: s, "metric dial indicators"),
-    ("17_indicator_clamp_3-8in", lambda: indicator_clamp(9.525), 1, lambda s: s, "US dial indicators"),
+    ("08_bearing_spacer", bearing_spacer, 2, lambda s: s, "on the M8 bolt, between bearing and cheek"),
+    ("09_plate_peg_standard", lambda: plate_peg(25.0, 40.0), 1, flip, "for 1-inch-hole plates"),
+    ("10_plate_peg_olympic", lambda: plate_peg(48.0, 70.0), 1, flip, "for 2-inch-hole plates"),
+    ("11_weight_tray", weight_tray, 1, lambda s: s, "on the standard peg, for flex bars"),
+    ("12_beam_deflection_yoke", lambda: yoke(SPANS[0], BT, BEAM_W / 2, True), 1, lambda s: s, "needs supports"),
+    ("13_bar_deflection_yoke", lambda: yoke(SPANS[1], BB + BAR_T, BAR_W / 2, False), 1, lambda s: s, "needs supports"),
+    ("14_indicator_clamp_8mm", lambda: indicator_clamp(8.0), 1, lambda s: s, "metric dial indicators"),
+    ("15_indicator_clamp_3-8in", lambda: indicator_clamp(9.525), 1, lambda s: s, "US dial indicators"),
 ]
 
 
@@ -274,13 +286,11 @@ def assembly(config="beam"):
     for i, sx in enumerate((-span / 2, span / 2)):
         a.add(saddle().translate((sx, 0, 0)), name=f"saddle{i}", color=cq.Color(0.55, 0.55, 0.53))
         a.add(support_pad(not beam).translate((sx, 0, 0)), name=f"pad{i}", color=cq.Color(0.24, 0.24, 0.22))
-        for sy in (-24, 24):
-            a.add(lock_pin().translate((sx, sy, HB - 11)), name=f"lock{i}{sy}", color=cq.Color(0.24, 0.24, 0.22))
     a.add(specimen(beam), name="specimen", color=cq.Color(0.16, 0.47, 0.84) if beam else cq.Color(0.92, 0.41, 0.20))
     a.add(beam_nose() if beam else bar_nose(), name="nose", color=cq.Color(0.24, 0.24, 0.22))
     a.add(lever(), name="lever", color=cq.Color(0.55, 0.55, 0.53))
-    a.add(pivot_pin().rotate((0, 0, 0), (1, 0, 0), 180).translate((-(LEVER_W / 2 + 10.5), PIVOT_Y, LEVER_CZ)),
-          name="pin", color=cq.Color(0.24, 0.24, 0.22))
+    a.add(cyl_x(BOLT_D / 2, -(LEVER_W / 2 + SPACER_T + 12), LEVER_W / 2 + SPACER_T + 20, PIVOT_Y, LEVER_CZ),
+          name="m8_bolt", color=cq.Color(0.6, 0.62, 0.66))
     a.add(plate_peg(48.0, 70.0) if beam else plate_peg(25.0, 40.0), name="peg", color=cq.Color(0.24, 0.24, 0.22))
     if not beam:
         a.add(weight_tray(), name="tray", color=cq.Color(0.80, 0.80, 0.78))

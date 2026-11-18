@@ -1,0 +1,25 @@
+group,part,file,material,qty,settings,volume_cm3,mass_each_g,mass_total_g,note
+Specimen,Triangle isogrid beam,cad/03_triangle_isogrid_25x25,PLA,3,solid (all perimeters),44.56,55.3,165.8,test specimen
+Specimen,Hexagon honeycomb beam,cad/04_hexagon_honeycomb_25x25,PLA,3,solid (all perimeters),44.56,55.3,165.8,test specimen
+Specimen,Solid flex bar,cad/00_solid_flex_bar_127x12.7x3.2,PLA,3,solid (all perimeters),5.16,6.4,19.2,base-material test
+Specimen,Triangle isogrid beam,cad/03_triangle_isogrid_25x25,PLA-CF,3,solid (all perimeters),44.56,54.4,163.1,test specimen
+Specimen,Hexagon honeycomb beam,cad/04_hexagon_honeycomb_25x25,PLA-CF,3,solid (all perimeters),44.56,54.4,163.1,test specimen
+Specimen,Solid flex bar,cad/00_solid_flex_bar_127x12.7x3.2,PLA-CF,3,solid (all perimeters),5.16,6.3,18.9,base-material test
+Specimen,Triangle isogrid beam,cad/03_triangle_isogrid_25x25,PAHT-CF,3,solid (all perimeters),44.56,47.2,141.7,test specimen
+Specimen,Hexagon honeycomb beam,cad/04_hexagon_honeycomb_25x25,PAHT-CF,3,solid (all perimeters),44.56,47.2,141.7,test specimen
+Specimen,Solid flex bar,cad/00_solid_flex_bar_127x12.7x3.2,PAHT-CF,3,solid (all perimeters),5.16,5.5,16.4,base-material test
+Rig,Base,rig/01_base,PLA,1,"4 walls, 25% infill",880.15,439.2,439.2,~9 MPa peak; stiffness does not affect the data
+Rig,Support saddle,rig/02_support_saddle,PAHT-CF,2,"6 walls, 60% infill",18.1,19.2,38.4,carries 1 kN each
+Rig,Beam support pad,rig/03_beam_support_pad,PAHT-CF,2,100% infill,4.53,4.8,9.6,100% infill
+Rig,Bar support pad (R5),rig/04_bar_support_pad,PAHT-CF,2,100% infill,2.71,2.9,5.8,100% infill
+Rig,Beam loading nose,rig/05_beam_loading_nose,PAHT-CF,1,100% infill,18.51,19.6,19.6,100% infill
+Rig,Bar loading nose (R5),rig/06_bar_loading_nose,PAHT-CF,1,100% infill,22.88,24.2,24.2,100% infill
+Rig,Lever,rig/07_lever,PLA-CF,1,"5 walls, 40% infill",295.61,205.3,205.3,print on its side; ~10 MPa peak at 2 kN
+Rig,Bearing spacer,rig/08_bearing_spacer,PAHT-CF,2,100% infill,0.06,0.1,0.1,
+Rig,"Plate peg, 1-inch plates",rig/09_plate_peg_standard,PLA-CF,1,"4 walls, 30% infill",54.99,36.0,36.0,print this OR the Olympic peg
+Rig,"Plate peg, Olympic plates",rig/10_plate_peg_olympic,PLA-CF,0,"4 walls, 30% infill",178.72,96.7,0.0,qty 1 if your plates have 2-inch holes
+Rig,Weight tray (flex bars),rig/11_weight_tray,PLA-CF,1,"3 walls, 15% infill",130.55,139.6,139.6,sits on the 1-inch peg
+Rig,Beam deflection yoke,rig/12_beam_deflection_yoke,PLA-CF,1,"4 walls, 30% infill, supports",42.04,45.8,45.8,supports
+Rig,Bar deflection yoke,rig/13_bar_deflection_yoke,PLA-CF,1,"4 walls, 30% infill, supports",23.23,26.0,26.0,supports
+Rig,"Indicator clamp, 8 mm stem",rig/14_indicator_clamp_8mm,PLA-CF,1,"4 walls, 50% infill",5.96,7.3,7.3,print this OR the 3/8 in clamp
+Rig,"Indicator clamp, 3/8 in stem",rig/15_indicator_clamp_3-8in,PLA-CF,0,"4 walls, 50% infill",6.06,7.4,0.0,qty 1 for a US indicator

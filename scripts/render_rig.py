@@ -26,12 +26,10 @@ def parts(config):
     out = [(r.base(), lt)]
     for sx in (-span / 2, span / 2):
         out += [(r.saddle().translate((sx, 0, 0)), mid), (r.support_pad(not beam).translate((sx, 0, 0)), dk)]
-        for sy in (-24, 24):
-            out.append((r.lock_pin().translate((sx, sy, r.HB - 11)), dk))
     out += [(r.specimen(beam), "#2a78d6" if beam else "#eb6834"),
             (r.beam_nose() if beam else r.bar_nose(), dk),
             (r.lever(), mid),
-            (r.pivot_pin().rotate((0, 0, 0), (1, 0, 0), 180).translate((-(r.LEVER_W / 2 + 10.5), r.PIVOT_Y, r.LEVER_CZ)), dk),
+            (r.cyl_x(r.BOLT_D / 2, -(r.LEVER_W / 2 + r.SPACER_T + 12), r.LEVER_W / 2 + r.SPACER_T + 20, r.PIVOT_Y, r.LEVER_CZ), "#9da0a6"),
             (r.plate_peg(48, 70) if beam else r.plate_peg(25, 40), dk),
             (r.yoke(span, r.BT if beam else r.BB + r.BAR_T, (r.BEAM_W if beam else r.BAR_W) / 2, beam), lt),
             (r.indicator_clamp(8.0), dk)]

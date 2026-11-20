@@ -59,7 +59,7 @@ This split puts each filament within one spool: PLA and PLA-CF on 1 kg, PAHT-CF 
 1. Mark mid-span on the specimen and center it on the pads.
 2. Set the nose on the specimen at mid-span, with its tab pointing toward the indicator post.
 3. Set the yoke on the specimen with its feet directly over the support pads.
-4. Slide the clamp onto the yoke post and lock it with the M3 x 10 screw. Push the indicator stem into the ring, lower it until the plunger rests on the nose tab with a few mm of travel used, and tighten the M3 x 12 pinch screw. Turn the dial face toward the end of the rig (−x) so it clears the tower.
+4. Slide the clamp onto the yoke post and lock it with the M3 x 10 screw. Push the indicator stem into the ring, lower it until the plunger is pushed in about 8-9 mm on the nose tab, and tighten the M3 x 12 pinch screw. The plunger extends as the specimen sags, so the travel used here is the most deflection the indicator can read. Turn the dial face toward the end of the rig (−x) so it clears the tower.
 5. Lower the lever onto the nose, then zero the indicator. That reading includes the preload.
 6. Add weights in equal steps. After each one wait about 10 s, then record the added mass and the dial reading.
 
